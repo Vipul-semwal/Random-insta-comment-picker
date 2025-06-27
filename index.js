@@ -143,4 +143,4 @@ function extractMediaCode(url) {
   return match ? match[1] : null;
 }
 
-app.listen(process.env.PORT, () => console.log('Server running on http://localhost:3000'));
+app.listen(process.env.PORT, () => console.log(`Server running on http://localhost:${process.env.PORT}`));
