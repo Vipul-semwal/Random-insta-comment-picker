@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instagram Comment Picker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      background-color: #fff;
+      padding: 20px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #f57c00;
+      text-align: center;
+    }
+    nav a { 
+      margin-left: 20px;
+      text-decoration: none;
+      color: #555;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #f57c00;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    form {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      animation: floatUp 0.8s ease forwards;
+    }
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    label {
+      display: block;
+      margin-bottom: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #f57c00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #e65100;
+    }
+    footer {
+      background-color: #fff;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #888;
+      box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+    }
+    
+    /* Enhanced loader styles */
+    .loader-container {
+      display: none;
+      text-align: center;
+      margin-top: 30px;
+      position: relative;
+    }
+    
+    .loader-header {
+      font-weight: 600;
+      color: #f57c00;
+      font-size: 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px auto;
+      max-width: 400px;
+      position: relative;
+    }
+    
+    .user-card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      animation: cardAppear 0.3s ease forwards;
+      opacity: 0;
+      transform: translateY(10px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      height: 100px;
+    }
+    
+    .user-card:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #f57c00, #ffb74d);
+    }
+    
+    @keyframes cardAppear {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      color: white;
+      background: #f57c00;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      font-size: 12px;
+      margin-bottom: 3px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .user-comment {
+      font-size: 10px;
+      color: #666;
+      text-align: center;
+      height: 28px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    
+    .scanning-beam {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(255, 183, 77, 0.8), transparent);
+      animation: beamScan 1.5s infinite;
+      z-index: 10;
+    }
+    
+    @keyframes beamScan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      margin: 25px auto 15px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #f57c00, #ffb74d);
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .loader-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+    
+    .highlighted {
+      animation: highlight 1s ease;
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(245, 124, 0, 0.3);
+    }
+    
+    @keyframes highlight {
+      0% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+      50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(245, 124, 0, 0.3); }
+      100% { transform: scale(1); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+    }
+    
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Comment Picker</h1>
+  </header>
+
+  <main>
+    <form id="pickerForm">
+      <label>
+        Reel/Post URL:
+        <input name="url" placeholder="https://instagram.com/reel/..." required />
+      </label>
+
+      <label>
+        Keyword (optional):
+        <input name="keyword" placeholder="e.g. amazing" />
+      </label>
+
+      <button type="submit">Pick a Random Comment</button>
+      <div id="loader" class="loader-container">
+        <div class="loader-header">
+          <span>🔍 Filtering comments...</span>
+        </div>
+        
+        <div class="scanning-beam"></div>
+        
+        <div class="users-grid" id="usersGrid">
+          <!-- User cards will be generated here -->
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="loader-text pulse" id="loaderText">Analyzing comments for the perfect match...</div>
+      </div>
+    </form>
+  </main>
+
+  <footer>
+    &copy; <span id="currentYear"></span> Instagram Comment Picker — built with ❤️ and coffee.
+  </footer>
+
+  <script>
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    
+    const indianNames = [
+      "Rahul Sharma", "Priya Patel", "Amit Kumar", "Deepak Singh", "Sneha Gupta",
+      "Vikram Joshi", "Anjali Desai", "Rajesh Mehta", "Sunita Reddy", "Arun Malhotra",
+      "Pooja Verma", "Sanjay Mishra", "Kavita Choudhury", "Vishal Agarwal", "Neha Saxena",
+      "Manoj Tiwari", "Swati Iyer", "Ravi Shastri", "Shilpa Kapoor", "Alok Pandey"
+    ];
+
+    const comments = [
+      "Kya baat hai bhai 👏", "Mast content bro 🔥", "This reel is pure gold!", "Dil khush ho gaya 😍",
+      "Ek number video!", "Tu toh legend nikla!", "Pure desi vibes 💯", "Mazaa aa gaya yaar!", 
+      "Tumhe dekhkar toh mummy bhi hans padi 😂", "Full support from my side!",
+      "This made my day!", "You're killing it!", "Amazing work!", "Desi swag at its best!",
+      "Can't stop watching!", "You deserve more followers!", "True talent!", "Heartwarming ❤️"
+    ];
+
+    const colors = [
+      "#FF6B6B", "#4ECDC4", "#FFD166", "#06D6A0", "#118AB2", 
+      "#EF476F", "#FF9F1C", "#2EC4B6", "#E71D36", "#FF9F1C",
+      "#8AC926", "#1982C4", "#6A4C93", "#F15BB5", "#00BBF9"
+    ];
+
+    function getRandom(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function getInitials(name) {
+      return name.split(' ').map(word => word[0]).join('');
+    }
+
+    function createUserCard() {
+      const name = getRandom(indianNames);
+      const comment = getRandom(comments);
+      const color = getRandom(colors);
+      const initials = getInitials(name);
+      
+      const card = document.createElement('div');
+      card.className = 'user-card';
+      card.style.animationDelay = `${Math.random() * 0.3}s`;
+      card.innerHTML = `
+        <div class="user-avatar" style="background-color: ${color}">
+          ${initials}
+        </div>
+        <div class="user-name">${name}</div>
+        <div class="user-comment">${comment}</div>
+      `;
+      
+      return card;
+    }
+
+    function populateGrid() {
+      const grid = document.getElementById('usersGrid');
+      grid.innerHTML = '';
+      
+      for (let i = 0; i < 9; i++) {
+        grid.appendChild(createUserCard());
+      }
+    }
+
+    function shuffleGrid() {
+      const grid = document.getElementById('usersGrid');
+      const cards = grid.querySelectorAll('.user-card');
+      
+      // Animate and replace one random card
+      const randomIndex = Math.floor(Math.random() * cards.length);
+      cards[randomIndex].classList.add('highlighted');
+      
+      setTimeout(() => {
+        cards[randomIndex].classList.remove('highlighted');
+        grid.replaceChild(createUserCard(), cards[randomIndex]);
+      }, 500);
+    }
+
+    let animationInterval;
+    let progressInterval;
+
+    function startLoaderAnimation() {
+      const loader = document.getElementById('loader');
+      const progressBar = document.getElementById('progressBar');
+      const loaderText = document.getElementById('loaderText');
+      
+      // Show loader
+      loader.style.display = 'block';
+      
+      // Populate initial grid
+      populateGrid();
+      
+      // Start shuffling animation
+      animationInterval = setInterval(shuffleGrid, 300);
+      
+      // Progress bar animation
+      let progress = 0;
+      progressBar.style.width = '0%';
+      
+      const progressMessages = [
+        "Scanning comments...",
+        "Filtering by keyword...",
+        "Identifying active users...",
+        "Selecting top candidates...",
+        "Almost there..."
+      ];
+      
+      progressInterval = setInterval(() => {
+        progress += 2;
+        progressBar.style.width = `${progress}%`;
+        
+        // Update progress message
+        if (progress === 20) loaderText.textContent = progressMessages[0];
+        if (progress === 40) loaderText.textContent = progressMessages[1];
+        if (progress === 60) loaderText.textContent = progressMessages[2];
+        if (progress === 80) loaderText.textContent = progressMessages[3];
+        if (progress === 95) loaderText.textContent = progressMessages[4];
+        
+        if (progress >= 100) {
+          progress = 0;
+          progressBar.style.width = '0%';
+        }
+      }, 100);
+    }
+
+    function stopLoaderAnimation() {
+      clearInterval(animationInterval);
+      clearInterval(progressInterval);
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const url = form.url.value;
+      const keyword = form.keyword.value;
+      
+      // Hide form, show loader
+      form.querySelector('button[type="submit"]').disabled = true;
+      startLoaderAnimation();
+      
+      // Your original fetch logic
+      fetch('/pick', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, keyword })
+      })
+      .then(res => res.text())
+      .then(html => {
+        stopLoaderAnimation();
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch(err => {
+        stopLoaderAnimation();
+        const loader = document.getElementById('loader');
+        loader.innerHTML = `
+          <div style="text-align: center; padding: 20px; background: #ffebee; border-radius: 8px; color: #c62828;">
+            <div style="font-size: 24px; margin-bottom: 10px;">❌</div>
+            <div style="font-weight: 600; margin-bottom: 15px;">Something went wrong!</div>
+            <p>${err.message || 'Please try again later'}</p>
+            <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; background: #f57c00; color: white; border: none; border-radius: 6px; cursor: pointer;">
+              Try Again
+            </button>
+          </div>
+        `;
+        console.error(err);
+      });
+    }
+
+    // Event listener for form submission
+    document.getElementById('pickerForm').addEventListener('submit', handleFormSubmit);
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oops! Something Went Wrong</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e96443, #904e95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      text-align: center;
+    }
+
+    .error-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      max-width: 500px;
+    }
+
+    .error-box h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #ffeb3b;
+    }
+
+    .error-box p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .error-box .error-msg {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-left: 5px solid #ff1744;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #ffeaea;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #ff1744;
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #d50000;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-box">
+    <h1>😢 Whoops!</h1>
+    <p>Something went wrong while processing your request.</p>
+    <% if (error) { %>
+      <div class="error-msg"><%= error %></div>
+    <% } %>
+    <a href="/" class="btn">Go Back Home</a>
+  </div>
+</body>
+</html>

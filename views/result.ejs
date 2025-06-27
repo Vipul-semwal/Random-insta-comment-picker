@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Instagram Comment Picker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+            margin: 20px 0;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            padding: 30px 15px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 20px 0 10px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
+        }
+        
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.5);
+            opacity: 0;
+            animation: boomIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        @keyframes boomIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .card-header {
+            margin-bottom: 20px;
+        }
+        
+        .card-header h2 {
+            color: #E1306C;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+        }
+        
+        .stat-item .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #405DE6;
+        }
+        
+        .stat-item .label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .winner-section {
+            margin: 25px 0;
+            padding: 25px 15px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .winner-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #405DE6, #E1306C);
+        }
+        
+        .winner-label {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 12px;
+        }
+        
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 0 auto 15px;
+        }
+        
+        .username {
+            font-size: 1.8rem;
+            color: #E1306C;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            word-break: break-word;
+            padding: 0 10px;
+        }
+        
+        .username::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #405DE6;
+            border-radius: 2px;
+        }
+        
+        .comment {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #343a40;
+            font-style: italic;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 15px;
+            word-break: break-word;
+        }
+        
+        .comment::before, .comment::after {
+            content: '"';
+            font-size: 2.5rem;
+            color: rgba(64, 93, 230, 0.2);
+            position: absolute;
+        }
+        
+        .comment::before {
+            top: -10px;
+            left: -2px;
+        }
+        
+        .comment::after {
+            bottom: -30px;
+            right: -2px;
+        }
+        
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 14px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #405DE6, #5851DB);
+            color: white;
+            box-shadow: 0 5px 15px rgba(64, 93, 230, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #E1306C, #C13584);
+            color: white;
+            box-shadow: 0 5px 15px rgba(225, 48, 108, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 15px;
+            color: #6c757d;
+            font-size: 0.85rem;
+            border-top: 1px solid #e9ecef;
+            line-height: 1.5;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 4s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(225, 48, 108, 0.7);
+            }
+            70% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 15px rgba(225, 48, 108, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(225, 48, 108, 0);
+            }
+        }
+        
+        .error-message {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .error-message h2 {
+            color: #f44336;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .error-message p {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: #405DE6;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background: #f0f4ff;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Form styles */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #405DE6;
+            box-shadow: 0 0 0 3px rgba(64, 93, 230, 0.1);
+        }
+        
+        .form-note {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #405DE6, #5851DB);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(64, 93, 230, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Tablet and larger screens */
+        @media (min-width: 481px) {
+            .header {
+                padding: 35px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header p {
+                font-size: 1.1rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+            }
+            
+            .content {
+                padding: 35px 25px;
+            }
+            
+            .result-card {
+                padding: 30px 25px;
+            }
+            
+            .card-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .stats {
+                flex-direction: row;
+                gap: 20px;
+            }
+            
+            .stat-item .number {
+                font-size: 1.6rem;
+            }
+            
+            .winner-section {
+                padding: 30px 20px;
+            }
+            
+            .winner-label {
+                font-size: 1.2rem;
+            }
+            
+            .username {
+                font-size: 2rem;
+            }
+            
+            .comment {
+                font-size: 1.3rem;
+            }
+            
+            .actions {
+                flex-direction: row;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: auto;
+                max-width: none;
+            }
+        }
+        
+        /* Desktop screens */
+        @media (min-width: 768px) {
+            .container {
+                margin: 40px 0;
+            }
+            
+            .header {
+                padding: 40px 30px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+                margin-top: 10px;
+            }
+            
+            .header p {
+                font-size: 1.1rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .content {
+                padding: 40px 35px;
+            }
+            
+            .result-card {
+                padding: 35px 30px;
+            }
+            
+            .card-header h2 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                gap: 30px;
+            }
+            
+            .stat-item {
+                padding: 15px 25px;
+            }
+            
+            .stat-item .number {
+                font-size: 1.8rem;
+            }
+            
+            .winner-section {
+                padding: 35px 30px;
+                margin: 30px 0;
+            }
+            
+            .winner-label {
+                font-size: 1.2rem;
+            }
+            
+            .username {
+                font-size: 2.2rem;
+            }
+            
+            .username::after {
+                width: 80px;
+                height: 4px;
+                bottom: -10px;
+            }
+            
+            .comment {
+                font-size: 1.4rem;
+                padding: 0 20px;
+            }
+            
+            .comment::before {
+                top: -15px;
+                left: -5px;
+            }
+            
+            .comment::after {
+                bottom: -40px;
+                right: -5px;
+            }
+            
+            .actions {
+                gap: 20px;
+            }
+            
+            .footer {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti effect -->
+    <div id="confetti-container"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-instagram"></i>
+                InstaPicker
+            </div>
+            <h1>Instagram Comment Picker</h1>
+            <p>Randomly select a winner from your Instagram post comments</p>
+        </div>
+        
+        <div class="content">
+            <% if (typeof error !== 'undefined') { %>
+                <div class="error-message">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Oops! Something went wrong</h2>
+                    <p><%= error %></p>
+                    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Form</a>
+                </div>
+            <% } else if (pick) { %>
+                <div class="result-card">
+                    <div class="card-header">
+                        <h2>And the winner is...</h2>
+                    </div>
+                    
+                    <div class="stats">
+                        <!-- <div class="stat-item">
+                            <div class="number"><%= count %></div>
+                            <div class="label">Filtered Comments</div>
+                        </div> -->
+                        <% if (keyword) { %>
+                            <div class="stat-item">
+                                <div class="number" style="color: #E1306C;"><%= keyword %></div>
+                                <div class="label">Keyword Used</div>
+                            </div>
+                        <% } %>
+                    </div>
+                    
+                    <div class="winner-section">
+                        <div class="winner-label">CONGRATULATIONS TO</div>
+<img src="/proxy-image?url=<%= encodeURIComponent(pick.profilePic) %>" alt="Winner profile picture" class="profile-pic">
+                        <div class="username">@<%= pick.username %></div>
+                        <div class="comment"><%= pick.text %></div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="window.location.href='/'">
+                            <i class="fas fa-redo"></i> Pick Another
+                        </button>
+                        <button class="btn btn-secondary" onclick="shareResult()">
+                            <i class="fas fa-share-alt"></i> Share Result
+                        </button>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="form-container">
+                    <form action="/pick" method="POST">
+                        <div class="form-group">
+                            <label for="url">Instagram Post URL</label>
+                            <input type="url" id="url" name="url" class="form-control" placeholder="https://www.instagram.com/p/..." required>
+                            <p class="form-note">Enter the URL of your Instagram post, reel, or IGTV</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="keyword">Keyword Filter (Optional)</label>
+                            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="#contest, @mention, etc.">
+                            <p class="form-note">Only include comments containing this keyword</p>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-random"></i> Pick a Winner
+                        </button>
+                    </form>
+                </div>
+            <% } %>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Instagram Comment Picker | All rights reserved</p>
+            <p>Results are randomly generated based on Instagram comments</p>
+        </div>
+    </div>
+
+    <script>
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#405DE6', '#5851DB', '#833AB4', '#C13584', '#E1306C', '#FD1D1D', '#fcb045'];
+            const container = document.getElementById('confetti-container');
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                container.appendChild(confetti);
+            }
+        }
+        
+        // Share result function
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Instagram Comment Picker Result',
+                    text: `Check out this randomly selected Instagram comment winner: @<%= pick.username %>`,
+                    url: window.location.href
+                })
+                .catch(console.error);
+            } else {
+                alert('Sharing is not supported in your browser. Copy the URL to share.');
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (pick) { 
+                createConfetti();
+             } 
+        });
+    </script>
+</body>
+</html>
