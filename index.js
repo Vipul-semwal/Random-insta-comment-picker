@@ -9,33 +9,30 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
-// app.get('/', (req, res) => res.render('result', {
-//   pick: {username: 'vipul daddyji!!', text: 'so goood!!' },
-//   count: 0,
-//   keyword: '',
-//    profilePic: 'https://via.placeholder.com/150',
-// }   ));
+// app.get('/', (req, res) => res.render('result', generateDummyData("",10)  ));
 app.get('/', (req, res) => res.render('form',   ));
 
 app.post('/pick', async (req, res) => {
   try {
-    const { url, keyword } = req.body;
+    const { url,limit } = req.body;
     const mediaCode = extractMediaCode(url);
 if (!mediaCode) throw new Error('Invalid Instagram URL');
+
+console.log('no:',typeof limit)
 
 
     if (!mediaCode) {
       return res.status(400).json({ error: 'Instagram media code is required' });
-    }
+    };
 
-    const result = await getRandomCommentFromRapidAPI(mediaCode, keyword);
+    const result = await getRandomCommentFromRapidAPI(mediaCode, "",+limit);
     console.log('API result:', result);
     if(result.error){
        res.status(500).render('error',{
         error:result.error
        })
     return
-    }
+    };
     res.render('result', result);
   } catch (err) {
     console.error('API error:', err);
@@ -65,7 +62,8 @@ app.get('/proxy-image', async (req, res) => {
   }
 });
 
-async function getRandomCommentFromRapidAPI(mediaCode, keyword) {
+async function getRandomCommentFromRapidAPI(mediaCode, keyword,limit) {
+    console.log('no:',typeof limit)
   const apiKey = process.env.RAPID_API_KEY;
   if (!apiKey) throw new Error('RapidAPI key not configured');
 
@@ -124,7 +122,9 @@ async function getRandomCommentFromRapidAPI(mediaCode, keyword) {
     return { error: `No comments found${keyword ? ' matching "' + keyword + '"' : ''}` };
   }
 
-  const pick = filtered[Math.floor(Math.random() * filtered.length)];
+   const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+  const pick = shuffled.slice(0, limit);
+
   return {
     pick,
     count: filtered.length,
@@ -135,6 +135,46 @@ async function getRandomCommentFromRapidAPI(mediaCode, keyword) {
     return {error:error.message}
 
  }
+}
+
+function generateDummyData(keyword, limit = 1) {
+  const dummyComments = [
+    {username: 'creative_soul', text: 'This is absolutely stunning! 😍 #art', profilePic: 'https://randomuser.me/api/portraits/women/12.jpg'},
+    {username: 'travel_buddy', text: 'Wish I was there right now! ✈️ #travel', profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'},
+    {username: 'foodie_forever', text: 'This looks delicious! 😋 #food', profilePic: 'https://randomuser.me/api/portraits/women/44.jpg'},
+    {username: 'tech_guru', text: 'Amazing technology! #innovation', profilePic: 'https://randomuser.me/api/portraits/men/67.jpg'},
+    {username: 'fitness_freak', text: 'Great workout routine! 💪 #fitness', profilePic: 'https://randomuser.me/api/portraits/women/68.jpg'},
+    {username: 'nature_lover', text: 'Beautiful scenery! 🌿 #nature', profilePic: 'https://randomuser.me/api/portraits/men/22.jpg'},
+    {username: 'bookworm', text: 'Just finished this amazing book! #reading', profilePic: 'https://randomuser.me/api/portraits/women/33.jpg'},
+    {username: 'music_maestro', text: 'This song is stuck in my head! 🎵 #music', profilePic: 'https://randomuser.me/api/portraits/men/55.jpg'},
+    {username: 'pet_lover', text: 'Your dog is so cute! 🐶 #pets', profilePic: 'https://randomuser.me/api/portraits/women/77.jpg'},
+    {username: 'fashion_icon', text: 'Love this outfit! 👗 #fashion', profilePic: 'https://randomuser.me/api/portraits/women/88.jpg'}
+  ];
+
+  let filtered = [...dummyComments];
+  
+//   // Apply keyword filter if provided
+//   if (keyword) {
+//     const kw = keyword.toLowerCase();
+//     filtered = filtered.filter(c => 
+//       c.text.toLowerCase().includes(kw) || 
+//       c.username.toLowerCase().includes(kw)
+//   }
+
+  if (!filtered.length) {
+    return { error: `No comments found${keyword ? ' matching "' + keyword + '"' : ''}` };
+  }
+
+  // Shuffle and select winners
+  const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+  const pick = shuffled.slice(0, limit);
+
+  return {
+    pick,
+    count: filtered.length,
+    keyword,
+    limit
+  };
 }
 
 

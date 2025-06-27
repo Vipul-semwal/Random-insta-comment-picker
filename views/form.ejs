@@ -262,9 +262,14 @@
         <input name="url" placeholder="https://instagram.com/reel/..." required />
       </label>
 
-      <label>
+      <!-- <label>
         Keyword (optional):
         <input name="keyword" placeholder="e.g. amazing" />
+      </label> -->
+
+       <label>
+        Number of comments (max 12):
+        <input name="numOfCom" placeholder=""  required />
       </label>
 
       <button type="submit">Pick a Random Comment</button>
@@ -424,7 +429,8 @@
       e.preventDefault();
       const form = e.target;
       const url = form.url.value;
-      const keyword = form.keyword.value;
+    //   const keyword = form.keyword.value;
+      const limit = form.numOfCom.value
       
       // Hide form, show loader
       form.querySelector('button[type="submit"]').disabled = true;
@@ -434,7 +440,7 @@
       fetch('/pick', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, keyword })
+        body: JSON.stringify({ url, limit })
       })
       .then(res => res.text())
       .then(html => {
