@@ -3,37 +3,101 @@ const express = require('express');
 const https = require('https');
 const app = express();
 const axios = require('axios');
+const FetchuserdataWithPupeteer = require('./scraper'); // Import the scraper module
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+const commentDataMap = {
+  "DKbYiafRBnr": [
+    {
+      username: 'asad_qureshi_007',
+      text: '🔥🔥',
+      profilePic: 'https://instagram.fdel36-1.fna.fbcdn.net/v/t51.2885-19/...BF&_nc_sid=7a9f4b'
+    },
+    {
+      username: 'soni_jaan_ss_',
+      text: 'Bharat mobile ko follow karo aur jaldi jaldi gift ka lahb uthao🔥',
+      profilePic: 'https://instagram.fdel36-1.fna.fbcdn.net/v/t51.2885-19/...73&_nc_sid=f5838a'
+    },
+    {
+      username: 'arpit_goswami295',
+      text: 'Bharat mobile',
+      profilePic: 'https://instagram.fdel36-1.fna.fbcdn.net/v/t51.2885-19/...57&_nc_sid=f5838a'
+    },
+    {
+      username: 'akdu_senorita_0517__',
+      text: 'Bhart mobile ❤️❤️❤️',
+      profilePic: 'https://instagram.fdel36-1.fna.fbcdn.net/v/t51.2885-19/...C4&_nc_sid=f5838a'
+    }
+    // Add more items from your list if you want
+  ]
+};
+
 // app.get('/', (req, res) => res.render('result', generateDummyData("",10)  ));
 app.get('/', (req, res) => res.render('form',   ));
 
+// app.post('/pick', async (req, res) => {
+//   try {
+//     const { url,limit } = req.body;
+//     const mediaCode = extractMediaCode(url);
+// if (!mediaCode) throw new Error('Invalid Instagram URL');
+
+// console.log('no:',typeof limit)
+
+
+//     if (!mediaCode) {
+//       return res.status(400).json({ error: 'Instagram media code is required' });
+//     };
+
+//     if(commentDataMap[mediaCode]){
+//       const result = getCommentDataByKey(mediaCode, +limit);
+//       console.log('In-memory result:', result);
+//       if(result.error){
+//         res.status(500).render('error', {
+//           error: result.error
+//         });
+//         return;
+//       }
+//       res.render('result', {...result,keyword:""});
+//       return;
+//     } 
+//     const result = await getRandomCommentFromRapidAPI(mediaCode, "",+limit);
+//     console.log('API result:', result);
+//     if(result.error){
+//        res.status(500).render('error',{
+//         error:result.error
+//        })
+//     return
+//     };
+//     res.render('result', result);
+//   } catch (err) {
+//     console.error('API error:', err);
+//     res.status(500).render('error', { 
+//       error: `Failed to get comments: ${err.message}` 
+//     });
+//   }
+// });
+
 app.post('/pick', async (req, res) => {
   try {
-    const { url,limit } = req.body;
+    const { url} = req.body;
     const mediaCode = extractMediaCode(url);
 if (!mediaCode) throw new Error('Invalid Instagram URL');
-
-console.log('no:',typeof limit)
-
-
-    if (!mediaCode) {
-      return res.status(400).json({ error: 'Instagram media code is required' });
-    };
-
-    const result = await getRandomCommentFromRapidAPI(mediaCode, "",+limit);
+    const result = await FetchuserdataWithPupeteer(url);
     console.log('API result:', result);
-    if(result.error){
-       res.status(500).render('error',{
-        error:result.error
-       })
-    return
-    };
-    res.render('result', result);
+    if (!result) {
+      return res.status(500).render('error', {
+        error: 'Failed! try again.'
+      });
+    }
+    res.render('result', {
+      pick: [{...result}],
+      count: 1,
+      keyword: "",});
+
   } catch (err) {
     console.error('API error:', err);
     res.status(500).render('error', { 
@@ -42,10 +106,13 @@ console.log('no:',typeof limit)
   }
 });
 
-
 app.get('/proxy-image', async (req, res) => {
   try {
     const imageUrl = decodeURIComponent(req.query.url);
+    console.log('Image URL:', imageUrl);
+    if (!imageUrl) {
+      return res.status(400).send('Image URL is required');
+    }
 
     const response = await axios.get(imageUrl, {
       responseType: 'stream',
@@ -57,7 +124,7 @@ app.get('/proxy-image', async (req, res) => {
     res.set('Content-Type', response.headers['content-type'] || 'image/jpeg');
     response.data.pipe(res);
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     res.status(500).send('Error loading image');
   }
 });
@@ -108,28 +175,33 @@ async function getRandomCommentFromRapidAPI(mediaCode, keyword,limit) {
   });
 
   let filtered = comments.map(c => ({
-    username: c.user?.username || 'unknown',
-    text: c.text,
-    profilePic: c.user?.profile_pic_url || 'https://via.placeholder.com/150',
-  }));
+  username: c.user?.username || 'unknown',
+  text: c.text,
+  profilePic: c.user?.profile_pic_url || 'https://via.placeholder.com/150',
+}));
 
-  if (keyword) {
-    const kw = keyword.toLowerCase();
-    filtered = filtered.filter(c => c.text.toLowerCase().includes(kw));
-  }
+// Optional keyword filter
+if (keyword) {
+  const kw = keyword.toLowerCase();
+  filtered = filtered.filter(c => c.text.toLowerCase().includes(kw));
+}
 
-  if (!filtered.length) {
-    return { error: `No comments found${keyword ? ' matching "' + keyword + '"' : ''}` };
-  }
+// === Remove duplicate usernames ===
+const seen = new Set();
+filtered = filtered.filter(c => {
+  if (seen.has(c.username)) return false;
+  seen.add(c.username);
+  return true;
+});
 
-   const shuffled = [...filtered].sort(() => 0.5 - Math.random());
-  const pick = shuffled.slice(0, limit);
+if (!filtered.length) {
+  return { error: `No comments found${keyword ? ' matching "' + keyword + '"' : ''}` };
+}
 
-  return {
-    pick,
-    count: filtered.length,
-    keyword
-  };
+const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+const pick = shuffled.slice(0, limit);
+
+return { pick, count: filtered.length, keyword };
  } catch (error) {
     console.log('error fetching comments:', error.message)
     return {error:error.message}
@@ -137,45 +209,31 @@ async function getRandomCommentFromRapidAPI(mediaCode, keyword,limit) {
  }
 }
 
-function generateDummyData(keyword, limit = 1) {
-  const dummyComments = [
-    {username: 'creative_soul', text: 'This is absolutely stunning! 😍 #art', profilePic: 'https://randomuser.me/api/portraits/women/12.jpg'},
-    {username: 'travel_buddy', text: 'Wish I was there right now! ✈️ #travel', profilePic: 'https://randomuser.me/api/portraits/men/32.jpg'},
-    {username: 'foodie_forever', text: 'This looks delicious! 😋 #food', profilePic: 'https://randomuser.me/api/portraits/women/44.jpg'},
-    {username: 'tech_guru', text: 'Amazing technology! #innovation', profilePic: 'https://randomuser.me/api/portraits/men/67.jpg'},
-    {username: 'fitness_freak', text: 'Great workout routine! 💪 #fitness', profilePic: 'https://randomuser.me/api/portraits/women/68.jpg'},
-    {username: 'nature_lover', text: 'Beautiful scenery! 🌿 #nature', profilePic: 'https://randomuser.me/api/portraits/men/22.jpg'},
-    {username: 'bookworm', text: 'Just finished this amazing book! #reading', profilePic: 'https://randomuser.me/api/portraits/women/33.jpg'},
-    {username: 'music_maestro', text: 'This song is stuck in my head! 🎵 #music', profilePic: 'https://randomuser.me/api/portraits/men/55.jpg'},
-    {username: 'pet_lover', text: 'Your dog is so cute! 🐶 #pets', profilePic: 'https://randomuser.me/api/portraits/women/77.jpg'},
-    {username: 'fashion_icon', text: 'Love this outfit! 👗 #fashion', profilePic: 'https://randomuser.me/api/portraits/women/88.jpg'}
-  ];
+// In-memory comment map
+/**
+ * Returns a randomized sample of comments for a given keyword key
+ * @param {string} key - The keyword identifying the comment group
+ * @param {number} limit - Number of comments to return
+ * @returns {{pick: Array, count: number, key: string, limit: number}|{error: string}}
+ */
+function getCommentDataByKey(key, limit = 1) {
+  const dataset = commentDataMap[key];
 
-  let filtered = [...dummyComments];
-  
-//   // Apply keyword filter if provided
-//   if (keyword) {
-//     const kw = keyword.toLowerCase();
-//     filtered = filtered.filter(c => 
-//       c.text.toLowerCase().includes(kw) || 
-//       c.username.toLowerCase().includes(kw)
-//   }
-
-  if (!filtered.length) {
-    return { error: `No comments found${keyword ? ' matching "' + keyword + '"' : ''}` };
+  if (!dataset || !dataset.length) {
+    return { error: `No comments found for key "${key}"` };
   }
 
-  // Shuffle and select winners
-  const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+  const shuffled = [...dataset].sort(() => Math.random() - 0.5);
   const pick = shuffled.slice(0, limit);
-
   return {
     pick,
-    count: filtered.length,
-    keyword,
+    count: dataset.length,
+    key,
     limit
   };
 }
+
+
 
 
 function extractMediaCode(url) {

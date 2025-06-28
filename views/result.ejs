@@ -641,7 +641,7 @@
                             <div class="label">Total Comments</div>
                         </div> -->
                         <div class="stat-item">
-                            <div class="number"><%= pick.length %></div>
+                            <!-- <div class="number"><%= pick.length %></div> -->
                             <div class="label">Winners Selected</div>
                         </div>
                         <% if (keyword) { %>
@@ -658,7 +658,7 @@
                         <div class="winner-card blurred" id="winner-<%= index %>">
                             <h3 class="normal-screen-winnerno">Winner no.<%= index+1 %></h3>
                             <div class="reveal-overlay">
-                                <button class="reveal-btn" onclick="revealWinner(<%= index %>)">
+                                <button class="reveal-btn" onclick="revealWinner('<%= index %>')">
                                     <i class="fas fa-eye"></i> Reveal Winner
                                 </button>
                                 <div class="instruction">Click to see who won!</div>
