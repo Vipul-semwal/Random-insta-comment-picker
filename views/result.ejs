@@ -678,8 +678,13 @@
                     </div>
                     
                     <div class="actions">
-                        <button class="btn btn-primary" onclick="window.location.href='/'">
-                            <i class="fas fa-redo"></i> Pick Another
+                        <div id="loader"></div>
+                       <button class="btn btn-primary" onclick="handlePickAnother(this)" data-url="<%= url %>">
+  <i class="fas fa-redo"></i> Pick Another
+</button>
+
+                         <button class="btn btn-primary" onclick="window.location.href='/'">
+                            <i class="fas fa-redo"></i> Home
                         </button>
                         <button class="btn btn-secondary" onclick="shareResult()">
                             <i class="fas fa-share-alt"></i> Share Results
@@ -773,6 +778,51 @@
         document.addEventListener('DOMContentLoaded', function() {
             createConfetti();
         });
+
+   function handlePickAnother(button) {
+  console.log("Pick another button clicked", button);
+  const url = button.dataset.url;
+
+  if (!url) {
+    alert("Missing URL!");
+    return;
+  }
+
+  // Save original text to restore later
+  const originalText = button.innerHTML;
+  button.disabled = true;
+  button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Loading...`;
+
+  fetch('/pick', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url })
+  })
+  .then(res => res.text())
+  .then(html => {
+    document.open();
+    document.write(html);
+    document.close();
+  })
+  .catch(err => {
+    const loader = document.getElementById('loader');
+    loader.innerHTML = `
+      <div style="text-align: center; padding: 20px; background: #ffebee; border-radius: 8px; color: #c62828;">
+        <div style="font-size: 24px; margin-bottom: 10px;">❌</div>
+        <div style="font-weight: 600; margin-bottom: 15px;">Something went wrong!</div>
+        <p>${err.message || 'Please try again later'}</p>
+        <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; background: #f57c00; color: white; border: none; border-radius: 6px; cursor: pointer;">
+          Try Again
+        </button>
+      </div>
+    `;
+    console.error(err);
+    // Restore button state in case of error
+    button.disabled = false;
+    button.innerHTML = originalText;
+  });
+}
+
     </script>
 </body>
 </html>

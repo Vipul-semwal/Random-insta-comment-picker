@@ -306,7 +306,7 @@ text : "Nice",
 profile : "https://igrcp.com/instapic/aHR0cHM6Ly9zY29udGVudC1saHI2LTIuY2RuaW5zdGFncmFtLmNvbS92L3Q1MS4yODg1LTE5LzUxMDkxODExOF8xNzkwMDEyMzg0NDIyNjYzN184Nzk4MzQ5NTQwNjg0MzA2ODQwX24uanBnP3N0cD1kc3QtanBnX3MxNTB4MTUwX3R0NiZfbmNfaHQ9c2NvbnRlbnQtbGhyNi0yLmNkbmluc3RhZ3JhbS5jb20mX25jX2NhdD0xMDUmX25jX29jPVE2Y1oyUUZENVBrTzlNemh6bU5UTFExa3YwV3ozOEN2THktVGhkNEwzdThKaUpQRWh4cllGZ2taU1BMNHNqZDJ1ckxodjBFJl9uY19vaGM9b2pyQ3BobkFUODBRN2tOdndFU2V5RUMmX25jX2dpZD1kOGJlNHRLTmVlYi1xV2NIeTZLbWtRJmVkbT1BS3A2Q2JJQkFBQUEmY2NiPTctNSZvaD0wMF9BZk51cnVFRmNJWFZ5Q0h5QmhVanVNcTJDT2luN1B4ampYdGZJZ2JtbjhaWGhRJm9lPTY4NjVENUE5Jl9uY19zaWQ9ZDYyMTc2" 
     }
 ,]
-  }
+  };
 
 // app.get('/', (req, res) => res.render('result', generateDummyData("",10)  ));
 app.get('/', (req, res) => res.render('form',   ));
@@ -333,7 +333,9 @@ console.log('no:',typeof limit)
         });
         return;
       }
-      res.render('result', {...result,keyword:""});
+     setTimeout(() => {
+       res.render('result', {...result,keyword:"",url:url}); // Simulate delay for better UX
+     }, 3000);
       return;
     } 
     const result = await getRandomtextFromRapidAPI(mediaCode, "",+limit);
@@ -344,9 +346,7 @@ console.log('no:',typeof limit)
        })
     return
     };
-   setTimeout(() => {
-     res.render('result', result);
-   }, 3000); // Simulate delay for better UX
+    res.render('result', result); // Simulate delay for better UX
   } catch (err) {
     console.error('API error:', err);
     res.status(500).render('error', { 
