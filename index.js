@@ -389,6 +389,88 @@ profile : "https://igrcp.com/instapic/aHR0cHM6Ly9zY29udGVudC1saHI2LTIuY2RuaW5zdG
     "profilePic": "https://igrcp.com/instapic/aHR0cHM6Ly9zY29udGVudC1saHI2LTEuY2RuaW5zdGFncmFtLmNvbS92L3Q1MS4yODg1LTE5LzQ2MTIxNDI0N18zOTEyMjkxMTczNjUwMDZfNjc1MTU1NTgxNDQ4MzAxMTQwOV9uLmpwZz9zdHA9ZHN0LWpwZ19zMTUweDE1MF90dDYmZWZnPWV5SjJaVzVqYjJSbFgzUmhaeUk2SW5CeWIyWnBiR1ZmY0dsakxtUnFZVzVuYnk0eE1EZ3dMbU15SW4wJl9uY19odD1zY29udGVudC1saHI2LTEuY2RuaW5zdGFncmFtLmNvbSZfbmNfY2F0PTExMCZfbmNfb2M9UTZjWjJRSG5OUFk3M2E0SW1CNW44eEJlWXVJZ1VWOVBhdjdnQXRUZDI1bkxDb2M3OUd2TjZQd3ppdG9VcTFtTURXZ1hNTDgmX25jX29oYz16NlU5SjN3WmFRUVE3a052d0dTWmdjMyZfbmNfZ2lkPWZHV0NibFNsQmM2cmVnOWl1OWVoaGcmZWRtPUFLcDZDYklCQUFBQSZjY2I9Ny01Jm9oPTAwX0FmYjVEOV9VTXQ4Z1lJR3ZBZzFvNml2SWdzLUk3bWFoX2VtRFplREFEYzJlYWcmb2U9NjhENDg3M0EmX25jX3NpZD1kNjIxNzY",
     "text": "Nice pic 👌👌"
   }
+],
+"DO_RqdTER8s":[
+  {
+    username: "ankita_baby7899",
+    text: "Bharat mobile shop bahut acche Hain aapka vyavhar bhi bahut achcha hai aap real gift dete Ho jyada Se jyada follow karo😍😍😍😍😍",
+    profilePic: ""
+  },
+  {
+    username: "ahil13031",
+    text: "😮😮😮",
+    profilePic: ""
+  },
+  {
+    username: "officail_arshu_king",
+    text: "❤",
+    profilePic: ""
+  },
+  {
+    username: "sahibansari4046",
+    text: "Bharat mobile ❤",
+    profilePic: ""
+  },
+  {
+    username: "arafat_ansari000",
+    text: "Bharat mobile ❤❤",
+    profilePic: ""
+  },
+  {
+    username: "dspsumit681",
+    text: "Mai bareilly se or apke pass se 20k rupee to lekar hi jaunga bahut jald hi apse mulakat hoge ek ke coin ke sath tab tak ke liye jay bharat jay hind",
+    profilePic: ""
+  },
+  {
+    username: "savej_malik_994",
+    text: "Bharat Mobile Reel shop ha🎁",
+    profilePic: ""
+  },
+  {
+    username: "sahibansari4046",
+    text: "Bharat mobile ❤",
+    profilePic: ""
+  },
+  {
+    username: "nafiz__ansari99",
+    text: "Bharat mobile best shop ❤",
+    profilePic: ""
+  },
+  {
+    username: "mr_azhar_ansari_786",
+    text: "Bharat mobile har dafa super karta ha",
+    profilePic: ""
+  },
+  {
+    username: "aman__raj_333",
+    text: "𝚂𝚊𝚛𝚍𝚑𝚊𝚗𝚊 𝚊𝚕𝚊 𝚑𝚎𝚛𝚘 👏👏",
+    profilePic: ""
+  },
+  {
+    username: "its__karan_roy",
+    text: "Wowwwww😍",
+    profilePic: ""
+  },
+  {
+    username: "sahilgujjar43520",
+    text: "Bharat mobile all the best ❤❤❤❤",
+    profilePic: ""
+  },
+  {
+    username: "aryan_kashyap_75",
+    text: "Humne bola to follow kar rakha hai humko bhi gift de do❤",
+    profilePic: ""
+  },
+  {
+    username: "junaid_x2.786",
+    text: "😍😍😍😍😍",
+    profilePic: ""
+  },
+  {
+    username: "ajmal.rana.98892",
+    text: "Bharat mobile sardhana",
+    profilePic: ""
+  }
 ]
 
   };
