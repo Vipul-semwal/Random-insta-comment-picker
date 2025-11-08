@@ -246,6 +246,22 @@ const  textDataMap = {
     username: "dr_babbu_malik",
     text: "Love you bro super job 💞"
   }
+], 
+"DPrGYs-EYaW": [
+  { username: "mr.hamid_qayyum", text: "Ê ❤️ 🔥 👍" },
+  { username: "musarff_khan_315", text: "🔥" },
+  { username: "shanukureshi6", text: "❤️💙❤️ Bharat" },
+  { username: "its_vansh_up_15", text: "❤️" },
+  { username: "umer__ansari__786_", text: "❤️ gajab Danish Bhai dhum macha dega aapka Diwali per 👍 supar" },
+  { username: "savezansari13", text: "❤️❤️❤️" },
+  { username: "itz.mannan_110", text: "❤️❤️" },
+  { username: "jainakash7187", text: "❤️ happy diwali" },
+  { username: "mister_jaan", text: "Bharat bhai ke pass mal h eesa jo vasool karde aapka pura paisa ❤️❤️" },
+  { username: "i_am_abushahma_315", text: "Ooooooo ❤️❤️❤️❤️" },
+  { username: "rizwan.hasmi.9250", text: "Bharat mobile ko jyada sa jyada follow karo sher karo like karo 👍👍👍👍" },
+  { username: "sahjab424", text: "सुपर ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️🔥🔥🔥🔥🔥🔥" },
+  { username: "desi_munda_981", text: "Bhart mobile ko follow karo 🙏" },
+  { username: "shamikassar11", text: "Pahla like Mera hai youtube par bhi intagram par bhi" }
 ],
   };
 
