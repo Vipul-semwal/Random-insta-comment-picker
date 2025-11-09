@@ -263,6 +263,84 @@ const  textDataMap = {
   { username: "desi_munda_981", text: "Bhart mobile ko follow karo 🙏" },
   { username: "shamikassar11", text: "Pahla like Mera hai youtube par bhi intagram par bhi" }
 ],
+"DP6JjjVEUso":[
+  {
+    username: "itx_chand_ansari",
+    comment: "📲📲"
+  },
+  {
+    username: "chand08557",
+    comment: "Bharat mobile📲"
+  },
+  {
+    username: "ajro.ansari.39_v27",
+    comment: "🔥🔥" // No visible text
+  },
+  {
+    username: "rihan_ans_7",
+    comment: "Assalamu alaikum🔥🔥💗💗💗"
+  },
+  {
+    username: "arsalanansari0836",
+    comment: "👍👍👍👍"
+  },
+  {
+    username: "arsalanansari08365",
+    comment: "👍👍👍👍👍👍"
+  },
+  {
+    username: "shakeelali4098",
+    comment: "Hii"
+  },
+  {
+    username: "turgutansari",
+    comment: "🤩🤩"
+  },
+  {
+    username: "shadab7409ansari",
+    comment: "🔥🔥🔥🔥🔥"
+  },
+  {
+    username: "yamesh.kumar",
+    comment: "Happy diwali bhaiya hum to Chhattisgarh se hu"
+  },
+  {
+    username: "sakib_no01",
+    comment: "🔥"
+  },
+  {
+    username: "vishvendrapratap1022",
+    comment: "🔥🔥🔥🔥🔥"
+  },
+  {
+    username: "offline_aadiyan_305",
+    comment: "Bharat mobile📲📲📲"
+  },
+  {
+    username: "my_arman__585",
+    comment: "💗💗"
+  },
+  {
+    username: "sanaaakii__0U037",
+    comment: "📲"
+  },
+  {
+    username: "hafizmohdyameen",
+    comment: "💗💗💗💗"
+  },
+  {
+    username: "musarrff_khan_315",
+    comment: "🔥"
+  },
+  {
+    username: "farhadabass476",
+    comment: "Bharat mobiles best give away 💗"
+  },
+  {
+    username: "_mr_rihan___",
+    comment: "🔥🔥🔥"
+  }
+],
   };
 
 // app.get('/', (req, res) => res.render('result', generateDummyData("",10)  ));
